@@ -55,9 +55,18 @@ class Matrix:
     def __str__(self):
         """Returns a string representation of the matrix."""
         matrix_str = ""
+        max_element_width = 0
+
+        # Find the maximum width of any element in the matrix
         for row in self.data:
-            row_str = " ".join(str(element) for element in row)
+            for element in row:
+                max_element_width = max(max_element_width, len(str(element)))
+
+        # Build the matrix string with aligned elements
+        for row in self.data:
+            row_str = " ".join(f"{element:>{max_element_width}}" for element in row)
             matrix_str += row_str + "\n"
+
         return matrix_str
     
     def __eq__(self, other_matrix):
@@ -145,7 +154,7 @@ class Matrix:
             ValueError: If the matrix is not square.
         """
         if not self._is_square():
-            raise ValueError("Matrix must be square to check for invertibility.")
+            return False
 
         return self.determinant() != 0
     
@@ -393,6 +402,19 @@ class Matrix:
             Matrix: A new identity matrix with the specified dimension.
         """
         data = [[1 if i == j else 0 for j in range(dimension)] for i in range(dimension)]
+        return Matrix(data)
+    
+    @staticmethod
+    def create_zeros_matrix(dimension: int) -> 'Matrix':
+        """Creates a zero matrix of the specified dimension.
+
+        Args:
+            dimension (int): The dimension of the matrix.
+
+        Returns:
+            Matrix: The zero matrix.
+        """
+        data = [[0.0] * dimension for _ in range(dimension)]
         return Matrix(data)
 
     @staticmethod
