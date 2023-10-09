@@ -1,5 +1,7 @@
 # py-matrix
 
+py-matrix is a third-party Python library that encapsulates a large number of operations on matrices and vectors. 
+
 ## Installation
 
 > install

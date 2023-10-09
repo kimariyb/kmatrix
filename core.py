@@ -19,6 +19,7 @@ For details, see the LICENSE file.
 """
 
 from typing_extensions import override
+
 import pandas as pd
 import numpy as np
 
@@ -503,19 +504,89 @@ class Vector(Matrix):
     @override
     @staticmethod
     def add(vector1, vector2) -> 'Vector':
-        ...
+        """Adds two vectors.
+
+        Args:
+            vector1 (Vector): The first vector.
+            vector1 (Vector): The second vector.
+
+        Returns:
+            Matrix: A new vector representing the sum of the two vector.
+
+        Raises:
+            ValueError: If the dimensions of the vectors do not match.
+        """
+        if not Vector.dimensions_match(vector1, vector2):
+            raise ValueError("Vector dimensions must match for addition.")
         
-    @override
-    @staticmethod
-    def subtract(matrix1, matrix2) -> 'Vector':
-        ...
-        
-    @override
-    @staticmethod
-    def create_identity(dimension: int) -> 'Vector':
-        ...
+        vector1_data = np.array(vector1.data)
+        vector2_data = np.array(vector2.data)
+        sum_vector_data = vector1_data + vector2_data
     
+        return Vector(sum_vector_data.tolist())
+        
     @override
     @staticmethod
-    def create_zeros(dimension: int) -> 'Vector':
-        ...
+    def subtract(vector1, vector2) -> 'Vector':
+        """Subtracts one vector from another.
+
+        Args:
+            vector1 (Vector): The vector to subtract from.
+            vector2 (Vector): The vector to subtract.
+
+        Returns:
+            Matrix: A new Vector object representing the result of the subtraction.
+
+        Raises:
+            ValueError: If the dimensions of the vectors do not match.
+        """
+        if not Vector.dimensions_match(vector1, vector2):
+            raise ValueError("Vector dimensions must match for subtraction.")
+
+        vector1_data = np.array(vector1.data)
+        vector2_data = np.array(vector2.data)
+        sum_vector_data = vector1_data - vector2_data
+    
+        return Vector(sum_vector_data.tolist())
+        
+    @override
+    @staticmethod
+    def create_identity(dimension: int, row_or_col: str) -> 'Vector':
+        """Creates an identity vector of the specified dimension.
+
+        Args:
+            dimension (int): The dimension of the identity vector.
+            row_or_col (str): 'row' to create a row vector, 'col' to create a column vector.
+
+        Returns:
+            Vector: A new identity vector with the specified dimension.
+        """
+        if row_or_col == 'row':
+            identity_vector_data = [[1.0] * dimension]
+        elif row_or_col == 'col':
+            identity_vector_data = [[1.0] for _ in range(dimension)]
+        else:
+            raise ValueError("Invalid value for 'row_or_col'. Expected 'row' or 'col'.")
+
+        return Vector(identity_vector_data)
+      
+    @override
+    @staticmethod
+    def create_zeros(dimension: int, row_or_col: str) -> 'Vector':
+        """Creates a zero vector of the specified dimension.
+
+        Args:
+            dimension (int): The dimension of the zero vector.
+            row_or_col (str): 'row' to create a row vector, 'col' to create a column vector.
+
+        Returns:
+            Vector: A new zero vector with the specified dimension.
+        """
+        if row_or_col == 'row':
+            zero_vector_data = [[0.0] * dimension]
+        elif row_or_col == 'col':
+            zero_vector_data = [[0.0] for _ in range(dimension)]
+        else:
+            raise ValueError("Invalid value for 'row_or_col'. Expected 'row' or 'col'.")
+
+        return Vector(zero_vector_data)
