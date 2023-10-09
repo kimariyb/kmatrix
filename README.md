@@ -2,28 +2,39 @@
 
 kmatrix is a third-party Python library that encapsulates a large number of operations on matrices and vectors. 
 
-## Installation
+## Install
 
 ```shell
 pip install kmatrix
 ```
 
-## Quickly Start
+## Usage
 
 ```python
+# import package of kmatrix.
 >>> from kmatrix import *
 
+# Initial the matrix A.
 >>> A = Matrix([
         [1, 2, 0],
         [1, 1, 1],
         [1, 0, 1]
     ])
 
->>> print(A.inverse())
+# Inverse the matrix A to get the matrix B.
+>>> B = A.inverse()
 
-     1.0 -2.0  2.0
-    -0.0  1.0 -1.0
-    -1.0  2.0 -1.0
+# Let matrix A be multiplied by matrix B, and print the result.
+>>> print(A.multiply(B))
+    1.0 0.0 0.0
+    0.0 1.0 0.0
+    0.0 0.0 1.0
+
+# Let matrix A be added by matrix B, and print the result.
+>>> print(Matrix.add(A, B))
+    2.0 0.0 2.0
+    1.0 2.0 0.0
+    0.0 2.0 0.0
 ```
 
 ## Independencies
