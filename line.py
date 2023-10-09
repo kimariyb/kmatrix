@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-__init__.py
+line.py
 
-This file is used to import the required module.
+This file is some of the methods for linear spaces 
+and linear transformations and other advanced applications in matrix theory.
 
 @author:
 Kimariyb, Hsiun Ryan (kimariyb@163.com)
@@ -15,8 +16,5 @@ Licensed under the MIT License.
 For details, see the LICENSE file.
 
 @data:
-2023-10-08
+2023-10-09
 """
-
-from .core import *
-from .line import *
