@@ -25,7 +25,9 @@ from .core import *
 from .line import *
 from .utils import *
 
+__appname__ = 'kmatrix'
 __author__ = 'Kimariyb, Hsiun Ryan'
 __version__ = '1.0.0 (dev)'
 __release__ = '2023-Oct-09'
 __website__ = 'https://github.com/kimariyb/py-matrix'
+__description__ = 'a lib that encapsulates a large number of operations on matrices and vectors.'
