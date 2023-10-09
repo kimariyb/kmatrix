@@ -2,7 +2,7 @@
 """
 core.py
 
-This file is the base class for executing matrix operations
+This file is the base class for executing matrix and vector operations
 
 @author:
 Kimariyb, Hsiun Ryan (kimariyb@163.com)
@@ -18,6 +18,7 @@ For details, see the LICENSE file.
 2023-10-08
 """
 
+from typing_extensions import override
 import pandas as pd
 import numpy as np
 
@@ -220,7 +221,7 @@ class Matrix:
         
         numpy_data = np.array(self.data)
         
-        return np.round(np.linalg.det(numpy_data), decimals=3)
+        return np.round(np.linalg.det(numpy_data), decimals=4)
     
     def multiply(self, other_matrix) -> 'Matrix':
         """Multiplies the current matrix with another matrix.
@@ -290,7 +291,7 @@ class Matrix:
 
         numpy_data = np.array(self.data)
         inverse_data = np.linalg.inv(numpy_data).tolist()
-        return Matrix(np.round(inverse_data, decimals=3))
+        return Matrix(np.round(inverse_data, decimals=4))
 
     def eigenvalues(self) -> any:
         """Calculates the eigenvalues of the current matrix.
@@ -300,7 +301,7 @@ class Matrix:
         """
         numpy_data = np.array(self.data)
         eigenvalues, _ = np.linalg.eig(numpy_data)
-        rounded_eigenvalues = np.round(eigenvalues, decimals=3)
+        rounded_eigenvalues = np.round(eigenvalues, decimals=4)
         return rounded_eigenvalues.tolist()
 
     def eigenvectors(self) -> 'Matrix':
@@ -311,7 +312,7 @@ class Matrix:
         """
         numpy_data = np.array(self.data)
         _, eigenvectors = np.linalg.eig(numpy_data)
-        rounded_eigenvectors = np.round(eigenvectors, decimals=3)
+        rounded_eigenvectors = np.round(eigenvectors, decimals=4)
         return rounded_eigenvectors.tolist()    
     
     def adjoint_matrix(self) -> 'Matrix':
@@ -392,7 +393,7 @@ class Matrix:
         return matrix1.rows == matrix2.rows and matrix1.cols == matrix2.cols
     
     @staticmethod
-    def create_identity_matrix(dimension: int) -> 'Matrix':
+    def create_identity(dimension: int) -> 'Matrix':
         """Creates an identity matrix of the specified dimension.
 
         Args:
@@ -405,7 +406,7 @@ class Matrix:
         return Matrix(data)
     
     @staticmethod
-    def create_zeros_matrix(dimension: int) -> 'Matrix':
+    def create_zeros(dimension: int) -> 'Matrix':
         """Creates a zero matrix of the specified dimension.
 
         Args:
@@ -435,3 +436,86 @@ class Matrix:
         
         # Create a Matrix object and return it
         return Matrix(matrix_data)
+
+class Vector(Matrix):
+    """A class representing a vector."""
+    def __init__(self, data: list):
+        """Initializes a vector with the given data.
+
+        Args:
+            data (list): The data of the vector, a 1D list of floats.
+        """
+        super().__init__(data)
+        self.magnitude = self._magnitude()
+        
+    def _magnitude(self):
+        """Calculates the magnitude (length) of the vector.
+        
+        Returns:
+            float: The magnitude of the vector.
+        """
+        vector = np.array(self.data)
+        magnitude = np.linalg.norm(vector)
+        return np.round(magnitude, decimals=4)
+    
+    def dot_product(self, other_vector):
+        """Calculates the dot product of the vector with another vector.
+
+        Args:
+            other_vector (Vector): The other vector to calculate the dot product with.
+
+        Returns:
+            float: The dot product value.
+        """
+        vector1 = np.array(self.data)
+        vector2 = np.array(other_vector.data)
+        dot_product_value = np.dot(vector1, vector2)
+        return dot_product_value
+
+    def cross_product(self, other_vector):
+        """Calculates the cross product of the vector with another vector.
+
+        Args:
+            other_vector (Vector): The other vector to calculate the cross product with.
+
+        Returns:
+            Vector: The cross product vector.
+        """
+        vector1 = np.array(self.data)
+        vector2 = np.array(other_vector.data)
+        cross_product_vector = np.cross(vector1, vector2)
+        return Vector(cross_product_vector.tolist())
+    
+    @override
+    @staticmethod
+    def dimensions_match(vector1, vector2) -> bool:
+        """Checks if the dimensions of two vectors match for addition or subtraction.
+
+        Args:
+            vector1 (Vector): The first vector.
+            vector2 (Vector): The second vector.
+
+        Returns:
+            bool: True if the dimensions match, False otherwise.
+        """
+        return len(vector1.data) == len(vector2.data)
+    
+    @override
+    @staticmethod
+    def add(vector1, vector2) -> 'Vector':
+        ...
+        
+    @override
+    @staticmethod
+    def subtract(matrix1, matrix2) -> 'Vector':
+        ...
+        
+    @override
+    @staticmethod
+    def create_identity(dimension: int) -> 'Vector':
+        ...
+    
+    @override
+    @staticmethod
+    def create_zeros(dimension: int) -> 'Vector':
+        ...
