@@ -20,7 +20,7 @@ For details, see the LICENSE file.
 
 import setuptools
 
-import matrix as ma
+import kmatrix as ma
 
 with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
