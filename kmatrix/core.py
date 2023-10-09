@@ -403,7 +403,7 @@ class Matrix:
         Returns:
             Matrix: A new identity matrix with the specified dimension.
         """
-        data = [[1 if i == j else 0 for j in range(dimension)] for i in range(dimension)]
+        data = [[1.0 if i == j else 0.0 for j in range(dimension)] for i in range(dimension)]
         return Matrix(data)
     
     @staticmethod

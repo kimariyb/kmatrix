@@ -7,6 +7,7 @@ This file is used to import the required module.
 @module:
 Numpy, v1.24.4;
 Pandas, v2.0.3;
+Setuptools, v68.0.0;
 
 @author:
 Kimariyb, Hsiun Ryan (kimariyb@163.com)
