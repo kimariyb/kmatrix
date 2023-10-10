@@ -8,6 +8,7 @@ This file is used to import the required module.
 Numpy, v1.24.4;
 Pandas, v2.0.3;
 Setuptools, v68.0.0;
+Openpyxl, v3.1.2
 
 @author:
 Kimariyb, Hsiun Ryan (kimariyb@163.com)

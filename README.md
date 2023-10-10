@@ -4,11 +4,15 @@ kmatrix is a third-party Python library that encapsulates a large number of oper
 
 ## Install
 
+You can use the following commands to install the kmatrix.
+
 ```shell
 pip install kmatrix
 ```
 
 ## Usage
+
+You can use the following commands to run the kmatrix.
 
 ```python
 # import package of kmatrix.
@@ -42,6 +46,7 @@ pip install kmatrix
 - **Numpy**, `version: 1.24.4`
 - **Pandas**, `version: 2.0.3`
 - **Setuptools**, `version: 68.0.0`
+- **Openpyxl**, `version: 3.1.2`
 
 ## License
 
