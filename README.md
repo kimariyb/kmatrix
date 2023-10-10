@@ -12,10 +12,10 @@ pip install kmatrix
 
 ```python
 # import package of kmatrix.
->>> from kmatrix import *
+>>> import kmatrix as kmx
 
 # Initial the matrix A.
->>> A = Matrix([
+>>> A = kmx.matrix([
         [1, 2, 0],
         [1, 1, 1],
         [1, 0, 1]

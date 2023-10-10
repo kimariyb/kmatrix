@@ -20,19 +20,19 @@ For details, see the LICENSE file.
 
 import setuptools
 
-import kmatrix as ma
+import kmatrix as kmx
 
 with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
     
 setuptools.setup(
-    name=ma.__appname__,
-    version=ma.__version__,
-    author=ma.__author__,
-    description=ma.__description__,
+    name=kmx.__appname__,
+    version=kmx.__version__,
+    author=kmx.__author__,
+    description=kmx.__description__,
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url=ma.__website__,
+    url=kmx.__website__,
     license='MIT',
     keywords='matrix',
     packages=setuptools.find_packages(),

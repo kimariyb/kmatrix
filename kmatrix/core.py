@@ -43,16 +43,19 @@ class Matrix:
         Args:
             data (list): The data of the matrix, a 2D list of floats.
         """
-        self.data = data
-        self.rows = len(data)
-        self.cols = len(data[0])
-        self.rank = self._rank()
-        self.is_square = self._is_square()
-        self.is_inverse = self._is_inverse()
-        self.is_symmetric = self._is_symmetric()
-        self.is_diagonal = self._is_diagonal()
-        self.is_identity = self._is_identity()
-        self.positive_definite = self._positive_definite()
+        if self._validate(data):
+            self.data = data
+            self.rows = len(data)
+            self.cols = len(data[0])
+            self.rank = self._rank()
+            self.is_square = self._is_square()
+            self.is_inverse = self._is_inverse()
+            self.is_symmetric = self._is_symmetric()
+            self.is_diagonal = self._is_diagonal()
+            self.is_identity = self._is_identity()
+            self.positive_definite = self._positive_definite()
+        else:
+            raise ValueError("Matrix is not an validated matrix")
     
     def __str__(self):
         """Returns a string representation of the matrix."""
@@ -84,6 +87,19 @@ class Matrix:
             return False
 
         return self.data == other_matrix.data
+    
+    @staticmethod
+    def _validate(data):
+        """ Validate the matrix data.
+
+        Returns:
+            bool: True if the matrix is valid, False otherwise.
+        """
+        if isinstance(data, list):
+            if all(isinstance(row, list) and all(isinstance(x, (int, float)) 
+                    for x in row) for row in data):
+                return True
+        return False
 
     def _is_square(self) -> bool:
         """Checks if the current matrix is a square matrix.
@@ -146,8 +162,7 @@ class Matrix:
         return True  
     
     def _is_inverse(self) -> bool:
-        """
-        Checks if the current matrix is invertible.
+        """Checks if the current matrix is invertible.
 
         Returns:
             bool: True if the matrix is invertible, False otherwise.
@@ -449,8 +464,11 @@ class Vector(Matrix):
         Args:
             data (list): The data of the vector, a 1D list of floats.
         """
-        super().__init__(data)
-        self.magnitude = self._magnitude()
+        if self._validate(data):
+            super().__init__(data)
+            self.magnitude = self._magnitude()
+        else: 
+            raise ValueError("Vector is not an validated vector")
         
     def _magnitude(self):
         """Calculates the magnitude (length) of the vector.
@@ -461,6 +479,24 @@ class Vector(Matrix):
         vector = np.array(self.data)
         magnitude = np.linalg.norm(vector)
         return np.round(magnitude, decimals=4)
+    
+    @override
+    @staticmethod
+    def _validate(data) -> bool:
+        """ Validate the vector data.
+
+        Returns:
+            bool: True if the vector is valid, False otherwise.
+        """
+        if isinstance(data, list):
+            if len(data) == 1:
+                return all(isinstance(item, (int, float)) for item in data[0])
+            elif len(data) > 1:
+                return all(
+                    isinstance(item, list) and len(item) == 1 and isinstance(item[0], (int, float))
+                    for item in data
+                )
+        return False
     
     @staticmethod
     def dot_product(vector1: 'Vector', vector2: 'Vector'):
