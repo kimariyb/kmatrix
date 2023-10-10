@@ -25,7 +25,7 @@ pip install kmatrix
 >>> B = A.inverse()
 
 # Let matrix A be multiplied by matrix B, and print the result.
->>> print(A.multiply(B))
+>>> print(Matrix.multiply(A, B))
     1.0 0.0 0.0
     0.0 1.0 0.0
     0.0 0.0 1.0

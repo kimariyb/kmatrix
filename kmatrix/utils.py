@@ -2,8 +2,7 @@
 """
 utils.py
 
-This file is some of the methods for linear spaces 
-and linear transformations and other advanced applications in matrix theory.
+This file is part of the kmatrix package.
 
 @author:
 Kimariyb, Hsiun Ryan (kimariyb@163.com)

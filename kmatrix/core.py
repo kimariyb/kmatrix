@@ -2,7 +2,7 @@
 """
 core.py
 
-This file is the base class for executing matrix and vector operations
+This file is the base class for executing matrix and vector operations.
 
 @author:
 Kimariyb, Hsiun Ryan (kimariyb@163.com)
@@ -223,46 +223,6 @@ class Matrix:
         numpy_data = np.array(self.data)
         
         return np.round(np.linalg.det(numpy_data), decimals=4)
-    
-    def multiply(self, other_matrix) -> 'Matrix':
-        """Multiplies the current matrix with another matrix.
-
-        Args:
-            other_matrix (Matrix): The matrix to multiply with.
-
-        Returns:
-            Matrix: A new matrix representing the result of the multiplication.
-
-        Raises:
-            ValueError: If the number of columns in the current matrix is not equal to the number of rows in the other matrix.
-        """
-        if self.cols != other_matrix.rows:
-            raise ValueError("Number of columns in the current matrix must be equal to the number of rows in the other matrix.")
-
-        result_data = []
-        for i in range(self.rows):
-            row = []
-            for j in range(other_matrix.cols):
-                element = 0
-                for k in range(self.cols):
-                    element += self.data[i][k] * other_matrix.data[k][j]
-                row.append(element)
-            result_data.append(row)
-
-        result_matrix = Matrix(result_data)
-        return result_matrix
-    
-    def scalar_multiply(self, scalar: float) -> 'Matrix':
-        """Multiplies the matrix by a scalar value.
-
-        Args:
-            scalar (float): The scalar value to multiply the matrix by.
-
-        Returns:
-            Matrix: A new Matrix object representing the result of the scalar multiplication.
-        """
-        result = [[scalar * element for element in row] for row in self.data]
-        return Matrix(result)
         
     def transpose(self) -> 'Matrix':
         """Transposes the current matrix.
@@ -333,7 +293,7 @@ class Matrix:
             raise ValueError("The matrix is not square.")
     
     @staticmethod
-    def add(matrix1, matrix2) -> 'Matrix':
+    def add(matrix1: 'Matrix', matrix2: 'Matrix') -> 'Matrix':
         """Adds two matrices.
 
         Args:
@@ -360,7 +320,7 @@ class Matrix:
         return Matrix(result_data)
 
     @staticmethod
-    def subtract(matrix1, matrix2) -> 'Matrix':
+    def subtract(matrix1: 'Matrix', matrix2: 'Matrix') -> 'Matrix':
         """Subtracts one matrix from another.
 
         Args:
@@ -381,7 +341,50 @@ class Matrix:
         return Matrix(result)
     
     @staticmethod
-    def dimensions_match(matrix1, matrix2) -> bool:
+    def multiply(matrix1: 'Matrix', matrix2: 'Matrix') -> 'Matrix':
+        """Multiplies the current matrix with another matrix.
+
+        Args:
+            matrix1 (Matrix): The matrix to multiply with.
+            matrix2 (Matrix): The matrix to multiply.
+
+        Returns:
+            Matrix: A new matrix representing the result of the multiplication.
+
+        Raises:
+            ValueError: If the number of columns in the first matrix is not equal to the number of rows in the second matrix.
+        """
+        if matrix1.cols != matrix2.rows:
+            raise ValueError("Number of columns in the first matrix must be equal to the number of rows in the second matrix.")
+        
+        result_data = []
+        for i in range(matrix1.rows):
+            row = []
+            for j in range(matrix2.cols):
+                element = 0
+                for k in range(matrix1.cols):
+                    element += matrix1.data[i][k] * matrix2.data[k][j]
+                row.append(element)
+            result_data.append(row)
+
+        return Matrix(result_data)
+    
+    @staticmethod
+    def scalar_multiply(matrix: 'Matrix', scalar: float) -> 'Matrix':
+        """Multiplies the matrix by a scalar value.
+
+        Args:
+            matrix (Matrix): The matrix to multiply.
+            scalar (float): The scalar value to multiply the matrix by.
+
+        Returns:
+            Matrix: A new Matrix object representing the result of the scalar multiplication.
+        """
+        result = [[scalar * element for element in row] for row in matrix.data]
+        return Matrix(result)
+    
+    @staticmethod
+    def dimensions_match(matrix1: 'Matrix', matrix2: 'Matrix') -> bool:
         """Checks if the dimensions of two matrices match for addition or subtraction.
 
         Args:
@@ -459,37 +462,36 @@ class Vector(Matrix):
         magnitude = np.linalg.norm(vector)
         return np.round(magnitude, decimals=4)
     
-    def dot_product(self, other_vector):
+    @staticmethod
+    def dot_product(vector1: 'Vector', vector2: 'Vector'):
         """Calculates the dot product of the vector with another vector.
 
         Args:
-            other_vector (Vector): The other vector to calculate the dot product with.
+            vector1 (Vector): The first vector.
+            vector2 (Vector): The second vector.
 
         Returns:
             float: The dot product value.
         """
-        vector1 = np.array(self.data)
-        vector2 = np.array(other_vector.data)
-        dot_product_value = np.dot(vector1, vector2)
-        return dot_product_value
+        return np.dot(np.array(vector1.data), np.array(vector2.data))
 
-    def cross_product(self, other_vector):
+    @staticmethod
+    def cross_product(vector1: 'Vector', vector2: 'Vector'):
         """Calculates the cross product of the vector with another vector.
 
         Args:
-            other_vector (Vector): The other vector to calculate the cross product with.
+            vector1 (Vector): The first vector.
+            vector2 (Vector): The second vector.
 
         Returns:
             Vector: The cross product vector.
         """
-        vector1 = np.array(self.data)
-        vector2 = np.array(other_vector.data)
-        cross_product_vector = np.cross(vector1, vector2)
+        cross_product_vector = np.cross(np.array(vector1.data), np.array(vector2.data))
         return Vector(cross_product_vector.tolist())
     
     @override
     @staticmethod
-    def dimensions_match(vector1, vector2) -> bool:
+    def dimensions_match(vector1: 'Vector', vector2: 'Vector') -> bool:
         """Checks if the dimensions of two vectors match for addition or subtraction.
 
         Args:
@@ -503,7 +505,7 @@ class Vector(Matrix):
     
     @override
     @staticmethod
-    def add(vector1, vector2) -> 'Vector':
+    def add(vector1: 'Vector', vector2: 'Vector') -> 'Vector':
         """Adds two vectors.
 
         Args:
@@ -527,7 +529,7 @@ class Vector(Matrix):
         
     @override
     @staticmethod
-    def subtract(vector1, vector2) -> 'Vector':
+    def subtract(vector1: 'Vector', vector2: 'Vector') -> 'Vector':
         """Subtracts one vector from another.
 
         Args:

@@ -18,3 +18,27 @@ For details, see the LICENSE file.
 @data:
 2023-10-09
 """
+
+from .core import *
+
+def matrix(array: list) -> Matrix:
+    """Creates a Matrix object from a nested list.
+
+    Args:
+        array (list): A nested list representing the matrix.
+
+    Returns:
+        Matrix: A Matrix object representing the input matrix.
+    """
+    return Matrix(array)
+
+def vector(array: list) -> Vector:
+    """Creates a Vector object from a list.
+
+    Args:
+        array (list): A list representing the vector.
+
+    Returns:
+        Vector: A Vector object representing the input vector.
+    """
+    return Vector(array)

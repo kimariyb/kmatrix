@@ -18,27 +18,13 @@ For details, see the LICENSE file.
 2023-10-09
 """
 
-from ..kmatrix import *
+import kmatrix as kms
 
 # This is the test case for the matrix and the vector.
-_test_matrix_1 = Matrix([
-    [],
-    [],
-    ...
-])
-_test_matrix_2 = Matrix([
-    [],
-    [],
-    ...
-])
-_test_vector_row = Vector([
-    [],
-])
-_test_vector_col = Vector([
-    [],
-    [],
-    ...
+test_vector = kms.vector([
+    [1],
+    [1, 2],
 ])
     
 if __name__ == '__main__':
-    ...
+    print(test_vector)
