@@ -436,25 +436,7 @@ class Matrix:
         """
         data = [[0.0] * dimension for _ in range(dimension)]
         return Matrix(data)
-
-    @staticmethod
-    def read_xlsx(xlsx_file: str) -> 'Matrix':
-        """Retrieve matrix data from an XLSX file and return a Matrix object.
-
-        Args:
-            xlsx_file (str): Path to the XLSX file.
-
-        Returns:
-            Matrix: A Matrix object containing the matrix data read from the XLSX file.
-        """
-        # Read the XLSX file using pandas
-        df = pd.read_excel(xlsx_file, header=None)
-        
-        # Convert DataFrame to a matrix format
-        matrix_data = df.values.tolist()
-        
-        # Create a Matrix object and return it
-        return Matrix(matrix_data)
+    
 
 class Vector(Matrix):
     """A class representing a vector."""

@@ -42,3 +42,4 @@ def vector(array: list) -> Vector:
         Vector: A Vector object representing the input vector.
     """
     return Vector(array)
+

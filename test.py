@@ -31,5 +31,6 @@ test_vector = kmx.vector([
 ])
     
 if __name__ == '__main__':
+    print(kmx.read_excel('array.xlsx'))
     print(test_matrix)
     print(test_vector)
