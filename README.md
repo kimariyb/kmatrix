@@ -56,7 +56,8 @@ You can also use a method to read the excel file.
 
 ## Document
 
-> Document
+1. [Linear algebra](./linear_algebra.md)
+2. [Matrix theory](./matrix_theory.md)
 
 ## Independencies
 
