@@ -17,11 +17,10 @@ For details, see the LICENSE file.
 @data:
 2023-10-08
 """
-
 from typing_extensions import override
 
-import pandas as pd
 import numpy as np
+
 
 class Matrix:
     """Represents a matrix and provides various matrix operations.
@@ -37,6 +36,7 @@ class Matrix:
         is_diagonal (bool): Indicates whether the matrix is diagonal or not.
         is_identity (bool): Indicates whether the matrix is an identity matrix or not.
     """
+
     def __init__(self, data: list):
         """Initializes a matrix with the given data.
 
@@ -45,8 +45,8 @@ class Matrix:
         """
         if self._validate(data):
             self.data = data
-            self.rows = len(data)
-            self.cols = len(data[0])
+            self.rows = len(self.data)
+            self.cols = len(self.data[0])
             self.rank = self._rank()
             self.is_square = self._is_square()
             self.is_inverse = self._is_inverse()
@@ -56,7 +56,7 @@ class Matrix:
             self.positive_definite = self._positive_definite()
         else:
             raise ValueError("Matrix is not an validated matrix")
-    
+
     def __str__(self):
         """Returns a string representation of the matrix."""
         matrix_str = ""
@@ -73,8 +73,8 @@ class Matrix:
             matrix_str += row_str + "\n"
 
         return matrix_str
-    
-    def __eq__(self, other_matrix):
+
+    def __eq__(self, other_matrix: 'Matrix') -> bool:
         """Compares two matrices for equality.
 
         Args:
@@ -88,6 +88,64 @@ class Matrix:
 
         return self.data == other_matrix.data
     
+    def __add__(self, other_matrix: 'Matrix') -> 'Matrix':
+        """Adds two matrices element-wise.
+
+        Args:
+            other_matrix (Matrix): The matrix to add.
+
+        Raises:
+            TypeError: If the `other_matrix` is not of type `Matrix`.
+            ValueError: If the dimensions of the matrices do not match.
+
+        Returns:
+            Matrix: A new matrix representing the element-wise sum of the two matrices.
+        """
+        if not isinstance(other_matrix, Matrix):
+            raise TypeError("Unsupported operand type for +")
+
+        if not self.dimensions_match(self, other_matrix):
+            raise ValueError("Matrix dimensions must match for addition.")
+
+        result_data = []
+        for i in range(self.rows):
+            row = []
+            for j in range(self.cols):
+                element = self.data[i][j] + other_matrix.data[i][j]
+                row.append(element)
+            result_data.append(row)
+
+        return Matrix(result_data)
+    
+    def __sub__(self, other_matrix: 'Matrix') -> 'Matrix':
+        """Subtracts two matrices element-wise.
+
+        Args:
+            other_matrix (Matrix): The matrix to subtract.
+
+        Raises:
+            TypeError: If the `other_matrix` is not of type `Matrix`.
+            ValueError: If the dimensions of the matrices do not match.
+
+        Returns:
+            Matrix: A new matrix representing the element-wise difference of the two matrices.
+        """
+        if not isinstance(other_matrix, Matrix):
+            raise TypeError("Unsupported operand type for -")
+
+        if not self.dimensions_match(self, other_matrix):
+            raise ValueError("Matrix dimensions must match for subtraction.")
+
+        result_data = []
+        for i in range(self.rows):
+            row = []
+            for j in range(self.cols):
+                element = self.data[i][j] - other_matrix.data[i][j]
+                row.append(element)
+            result_data.append(row)
+
+        return Matrix(result_data)
+    
     @staticmethod
     def _validate(data):
         """ Validate the matrix data.
@@ -96,7 +154,7 @@ class Matrix:
             bool: True if the matrix is valid, False otherwise.
         """
         if isinstance(data, list):
-            if all(isinstance(row, list) and all(isinstance(x, (int, float)) 
+            if all(isinstance(row, list) and all(isinstance(x, (int, float))
                     for x in row) for row in data):
                 return True
         return False
@@ -159,8 +217,8 @@ class Matrix:
                     if self.data[i][j] != 0:
                         return False
 
-        return True  
-    
+        return True
+
     def _is_inverse(self) -> bool:
         """Checks if the current matrix is invertible.
 
@@ -174,7 +232,7 @@ class Matrix:
             return False
 
         return self.determinant() != 0
-    
+
     def _rank(self) -> int:
         """Calculates the rank of the matrix.
 
@@ -186,7 +244,7 @@ class Matrix:
         """
         numpy_data = np.array(self.data)
         return np.linalg.matrix_rank(numpy_data)
-    
+
     def _positive_definite(self) -> bool:
         """Checks if the matrix is positive definite.
 
@@ -199,7 +257,7 @@ class Matrix:
             return np.all(eigenvalues > 0)
         else:
             return False
-        
+
     def _cofactor(self, row: int, col: int) -> float:
         """Calculates and returns the cofactor of the specified element in the matrix.
 
@@ -222,7 +280,7 @@ class Matrix:
             submatrix_data.append(row_data)
         submatrix = Matrix(submatrix_data)
         return (-1) ** (row + col) * submatrix.determinant()
-        
+
     def determinant(self) -> float:
         """Calculates the determinant of the current matrix.
 
@@ -234,11 +292,11 @@ class Matrix:
         """
         if not self._is_square():
             raise ValueError("Matrix must be square to calculate the determinant.")
-        
+
         numpy_data = np.array(self.data)
-        
+
         return np.round(np.linalg.det(numpy_data), decimals=4)
-        
+
     def transpose(self) -> 'Matrix':
         """Transposes the current matrix.
 
@@ -249,7 +307,7 @@ class Matrix:
         for j in range(self.cols):
             transposed_row = [self.data[i][j] for i in range(self.rows)]
             transposed_data.append(transposed_row)
-        
+
         transposed_matrix = Matrix(transposed_data)
         return transposed_matrix
 
@@ -267,7 +325,7 @@ class Matrix:
 
         numpy_data = np.array(self.data)
         inverse_data = np.linalg.inv(numpy_data).tolist()
-        return Matrix(np.round(inverse_data, decimals=4))
+        return Matrix(np.round(inverse_data, decimals=4).tolist())
 
     def eigenvalues(self) -> any:
         """Calculates the eigenvalues of the current matrix.
@@ -289,8 +347,8 @@ class Matrix:
         numpy_data = np.array(self.data)
         _, eigenvectors = np.linalg.eig(numpy_data)
         rounded_eigenvectors = np.round(eigenvectors, decimals=4)
-        return rounded_eigenvectors.tolist()    
-    
+        return rounded_eigenvectors.tolist()
+
     def adjoint_matrix(self) -> 'Matrix':
         """Calculates and returns the adjoint matrix of the matrix.
 
@@ -306,62 +364,12 @@ class Matrix:
             return Matrix(adjoint_data)
         else:
             raise ValueError("The matrix is not square.")
-    
-    @staticmethod
-    def add(matrix1: 'Matrix', matrix2: 'Matrix') -> 'Matrix':
-        """Adds two matrices.
 
-        Args:
-            matrix1 (Matrix): The first matrix.
-            matrix2 (Matrix): The second matrix.
-
-        Returns:
-            Matrix: A new matrix representing the sum of the two matrices.
-
-        Raises:
-            ValueError: If the dimensions of the matrices do not match.
-        """
-        if not Matrix.dimensions_match(matrix1, matrix2):
-            raise ValueError("Matrix dimensions must match for addition.")
-
-        result_data = []
-        for i in range(matrix1.rows):
-            row = []
-            for j in range(matrix1.cols):
-                element = matrix1.data[i][j] + matrix2.data[i][j]
-                row.append(element)
-            result_data.append(row)
-
-        return Matrix(result_data)
-
-    @staticmethod
-    def subtract(matrix1: 'Matrix', matrix2: 'Matrix') -> 'Matrix':
-        """Subtracts one matrix from another.
-
-        Args:
-            matrix1 (Matrix): The matrix to subtract from.
-            matrix2 (Matrix): The matrix to subtract.
-
-        Returns:
-            Matrix: A new Matrix object representing the result of the subtraction.
-
-        Raises:
-            ValueError: If the dimensions of the matrices do not match.
-        """
-        if not Matrix.dimensions_match(matrix1, matrix2):
-            raise ValueError("Matrix dimensions must match for subtraction.")
-
-        result = [[matrix1.data[i][j] - matrix2.data[i][j] for j in range(matrix1.cols)] 
-                for i in range(matrix1.rows)]
-        return Matrix(result)
-    
-    @staticmethod
-    def multiply(matrix1: 'Matrix', matrix2: 'Matrix') -> 'Matrix':
+    def multiply(self, other_matrix: 'Matrix') -> 'Matrix':
         """Multiplies the current matrix with another matrix.
 
         Args:
-            matrix1 (Matrix): The matrix to multiply with.
-            matrix2 (Matrix): The matrix to multiply.
+            other_matrix (Matrix): The matrix to multiply with.
 
         Returns:
             Matrix: A new matrix representing the result of the multiplication.
@@ -369,35 +377,34 @@ class Matrix:
         Raises:
             ValueError: If the number of columns in the first matrix is not equal to the number of rows in the second matrix.
         """
-        if matrix1.cols != matrix2.rows:
-            raise ValueError("Number of columns in the first matrix must be equal to the number of rows in the second matrix.")
-        
+        if self.cols != other_matrix.rows:
+            raise ValueError(
+                "Number of columns in the first matrix must be equal to the number of rows in the second matrix.")
+
         result_data = []
-        for i in range(matrix1.rows):
+        for i in range(self.rows):
             row = []
-            for j in range(matrix2.cols):
+            for j in range(other_matrix.cols):
                 element = 0
-                for k in range(matrix1.cols):
-                    element += matrix1.data[i][k] * matrix2.data[k][j]
+                for k in range(self.cols):
+                    element += self.data[i][k] * other_matrix.data[k][j]
                 row.append(element)
             result_data.append(row)
 
         return Matrix(result_data)
-    
-    @staticmethod
-    def scalar_multiply(matrix: 'Matrix', scalar: float) -> 'Matrix':
+
+    def scalar(self, scalar: float) -> 'Matrix':
         """Multiplies the matrix by a scalar value.
 
         Args:
-            matrix (Matrix): The matrix to multiply.
             scalar (float): The scalar value to multiply the matrix by.
 
         Returns:
             Matrix: A new Matrix object representing the result of the scalar multiplication.
         """
-        result = [[scalar * element for element in row] for row in matrix.data]
+        result = [[scalar * element for element in row] for row in self.data]
         return Matrix(result)
-    
+
     @staticmethod
     def dimensions_match(matrix1: 'Matrix', matrix2: 'Matrix') -> bool:
         """Checks if the dimensions of two matrices match for addition or subtraction.
@@ -410,7 +417,7 @@ class Matrix:
             bool: True if the dimensions match, False otherwise.
         """
         return matrix1.rows == matrix2.rows and matrix1.cols == matrix2.cols
-    
+
     @staticmethod
     def create_identity(dimension: int) -> 'Matrix':
         """Creates an identity matrix of the specified dimension.
@@ -423,7 +430,7 @@ class Matrix:
         """
         data = [[1.0 if i == j else 0.0 for j in range(dimension)] for i in range(dimension)]
         return Matrix(data)
-    
+
     @staticmethod
     def create_zeros(dimension: int) -> 'Matrix':
         """Creates a zero matrix of the specified dimension.
@@ -436,10 +443,11 @@ class Matrix:
         """
         data = [[0.0] * dimension for _ in range(dimension)]
         return Matrix(data)
-    
+
 
 class Vector(Matrix):
     """A class representing a vector."""
+
     def __init__(self, data: list):
         """Initializes a vector with the given data.
 
@@ -449,9 +457,55 @@ class Vector(Matrix):
         if self._validate(data):
             super().__init__(data)
             self.magnitude = self._magnitude()
-        else: 
+        else:
             raise ValueError("Vector is not an validated vector")
         
+    @override
+    def __add__(self, other_vector: 'Vector') -> 'Vector':
+        """Adds two vectors element-wise.
+
+        Args:
+            other_vector (Vector): The vector to add.
+
+        Raises:
+            TypeError: If the `other_vector` is not of type `Vector`.
+            ValueError: If the dimensions of the vectors do not match.
+
+        Returns:
+            Vector: A new vector representing the element-wise sum of the two vectors.
+        """
+        if not isinstance(other_vector, Vector):
+            raise TypeError("Unsupported operand type for +")
+
+        if not self.dimensions_match(self, other_vector):
+            raise ValueError("Vector dimensions must match for addition.")
+
+        sum_vector_data = np.array(self.data) + np.array(other_vector.data)
+        return Vector(sum_vector_data.tolist())
+    
+    @override
+    def __sub__(self, other_vector: 'Vector') -> 'Vector':
+        """Subtracts one vector from another element-wise.
+
+        Args:
+            other_vector (Vector): The vector to subtract.
+
+        Raises:
+            TypeError: If the `other_vector` is not of type `Vector`.
+            ValueError: If the dimensions of the vectors do not match.
+
+        Returns:
+            Vector: A new Vector object representing the result of the subtraction.
+        """
+        if not isinstance(other_vector, Vector):
+            raise TypeError("Unsupported operand type for -")
+
+        if not self.dimensions_match(self, other_vector):
+            raise ValueError("Vector dimensions must match for subtraction.")
+
+        diff_vector_data = np.array(self.data) - np.array(other_vector.data)
+        return Vector(diff_vector_data.tolist())
+    
     def _magnitude(self):
         """Calculates the magnitude (length) of the vector.
         
@@ -461,7 +515,7 @@ class Vector(Matrix):
         vector = np.array(self.data)
         magnitude = np.linalg.norm(vector)
         return np.round(magnitude, decimals=4)
-    
+
     @override
     @staticmethod
     def _validate(data) -> bool:
@@ -479,34 +533,30 @@ class Vector(Matrix):
                     for item in data
                 )
         return False
-    
-    @staticmethod
-    def dot_product(vector1: 'Vector', vector2: 'Vector'):
+
+    def dot_product(self, other_vector: 'Vector'):
         """Calculates the dot product of the vector with another vector.
 
         Args:
-            vector1 (Vector): The first vector.
-            vector2 (Vector): The second vector.
+            other_vector (Vector): The other vector.
 
         Returns:
             float: The dot product value.
         """
-        return np.dot(np.array(vector1.data), np.array(vector2.data))
+        return np.dot(np.array(self.data), np.array(other_vector.data))
 
-    @staticmethod
-    def cross_product(vector1: 'Vector', vector2: 'Vector'):
+    def cross_product(self, other_vector: 'Vector'):
         """Calculates the cross product of the vector with another vector.
 
         Args:
-            vector1 (Vector): The first vector.
-            vector2 (Vector): The second vector.
+            other_vector (Vector): The other vector.
 
         Returns:
             Vector: The cross product vector.
         """
-        cross_product_vector = np.cross(np.array(vector1.data), np.array(vector2.data))
+        cross_product_vector = np.cross(np.array(self.data), np.array(other_vector.data))
         return Vector(cross_product_vector.tolist())
-    
+
     @override
     @staticmethod
     def dimensions_match(vector1: 'Vector', vector2: 'Vector') -> bool:
@@ -520,55 +570,7 @@ class Vector(Matrix):
             bool: True if the dimensions match, False otherwise.
         """
         return len(vector1.data) == len(vector2.data)
-    
-    @override
-    @staticmethod
-    def add(vector1: 'Vector', vector2: 'Vector') -> 'Vector':
-        """Adds two vectors.
 
-        Args:
-            vector1 (Vector): The first vector.
-            vector1 (Vector): The second vector.
-
-        Returns:
-            Matrix: A new vector representing the sum of the two vector.
-
-        Raises:
-            ValueError: If the dimensions of the vectors do not match.
-        """
-        if not Vector.dimensions_match(vector1, vector2):
-            raise ValueError("Vector dimensions must match for addition.")
-        
-        vector1_data = np.array(vector1.data)
-        vector2_data = np.array(vector2.data)
-        sum_vector_data = vector1_data + vector2_data
-    
-        return Vector(sum_vector_data.tolist())
-        
-    @override
-    @staticmethod
-    def subtract(vector1: 'Vector', vector2: 'Vector') -> 'Vector':
-        """Subtracts one vector from another.
-
-        Args:
-            vector1 (Vector): The vector to subtract from.
-            vector2 (Vector): The vector to subtract.
-
-        Returns:
-            Matrix: A new Vector object representing the result of the subtraction.
-
-        Raises:
-            ValueError: If the dimensions of the vectors do not match.
-        """
-        if not Vector.dimensions_match(vector1, vector2):
-            raise ValueError("Vector dimensions must match for subtraction.")
-
-        vector1_data = np.array(vector1.data)
-        vector2_data = np.array(vector2.data)
-        sum_vector_data = vector1_data - vector2_data
-    
-        return Vector(sum_vector_data.tolist())
-        
     @override
     @staticmethod
     def create_identity(dimension: int, row_or_col: str) -> 'Vector':
@@ -589,7 +591,7 @@ class Vector(Matrix):
             raise ValueError("Invalid value for 'row_or_col'. Expected 'row' or 'col'.")
 
         return Vector(identity_vector_data)
-      
+
     @override
     @staticmethod
     def create_zeros(dimension: int, row_or_col: str) -> 'Vector':

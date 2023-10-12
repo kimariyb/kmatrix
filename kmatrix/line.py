@@ -18,8 +18,8 @@ For details, see the LICENSE file.
 @data:
 2023-10-09
 """
-
 from .core import *
+
 
 def matrix(array: list) -> Matrix:
     """Creates a Matrix object from a nested list.
@@ -32,6 +32,7 @@ def matrix(array: list) -> Matrix:
     """
     return Matrix(array)
 
+
 def vector(array: list) -> Vector:
     """Creates a Vector object from a list.
 
@@ -42,4 +43,3 @@ def vector(array: list) -> Vector:
         Vector: A Vector object representing the input vector.
     """
     return Vector(array)
-

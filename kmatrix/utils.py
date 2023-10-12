@@ -19,6 +19,9 @@ For details, see the LICENSE file.
 """
 from .core import *
 
+import pandas as pd
+
+
 def read_excel(excel_file: str) -> Matrix:
     """Retrieve matrix data from an XLSX file and return a Matrix object.
 
@@ -30,9 +33,7 @@ def read_excel(excel_file: str) -> Matrix:
     """
     # Read the XLSX file using pandas
     df = pd.read_excel(excel_file, header=None)
-    
     # Convert DataFrame to a matrix format
     matrix_data = df.values.tolist()
-    
     # Create a Matrix object and return it
     return Matrix(matrix_data)

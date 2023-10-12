@@ -17,14 +17,13 @@ For details, see the LICENSE file.
 @data:
 2023-10-09
 """
-
 import setuptools
 
 import kmatrix as kmx
 
 with open('README.md', 'r', encoding='utf-8') as fh:
     long_description = fh.read()
-    
+
 setuptools.setup(
     name=kmx.__appname__,
     version=kmx.__version__,
