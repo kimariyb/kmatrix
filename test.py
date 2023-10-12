@@ -19,3 +19,17 @@ For details, see the LICENSE file.
 """
 import kmatrix as kmx
 
+A = kmx.matrix([
+    [1, 2, 3],
+    [3, 2, 1],
+    [0, 0, 7]
+])
+
+B = kmx.matrix([
+    [1, 2, 3],
+    [3, 2, 1],
+    [2, 4, 13]
+])
+
+print(A.swap_row(0, 1))
+

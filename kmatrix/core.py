@@ -43,17 +43,17 @@ class Matrix:
         Args:
             data (list): The data of the matrix, a 2D list of floats.
         """
-        if self._validate(data):
+        if self.__validate(data):
             self.data = data
             self.rows = len(self.data)
             self.cols = len(self.data[0])
-            self.rank = self._rank()
-            self.is_square = self._is_square()
-            self.is_inverse = self._is_inverse()
-            self.is_symmetric = self._is_symmetric()
-            self.is_diagonal = self._is_diagonal()
-            self.is_identity = self._is_identity()
-            self.positive_definite = self._positive_definite()
+            self.rank = self.__rank()
+            self.is_square = self.__is_square()
+            self.is_inverse = self.__is_inverse()
+            self.is_symmetric = self.__is_symmetric()
+            self.is_diagonal = self.__is_diagonal()
+            self.is_identity = self.__is_identity()
+            self.positive_definite = self.__positive_definite()
         else:
             raise ValueError("Matrix is not an validated matrix")
 
@@ -87,7 +87,7 @@ class Matrix:
             return False
 
         return self.data == other_matrix.data
-    
+
     def __add__(self, other_matrix: 'Matrix') -> 'Matrix':
         """Adds two matrices element-wise.
 
@@ -116,7 +116,7 @@ class Matrix:
             result_data.append(row)
 
         return Matrix(result_data)
-    
+
     def __sub__(self, other_matrix: 'Matrix') -> 'Matrix':
         """Subtracts two matrices element-wise.
 
@@ -145,9 +145,57 @@ class Matrix:
             result_data.append(row)
 
         return Matrix(result_data)
-    
+
+    def __mul__(self, other_matrix: 'Matrix') -> 'Matrix':
+        """Multiplies the current matrix with another matrix.
+
+        Args:
+            other_matrix (Matrix): The matrix to multiply with.
+
+        Returns:
+            Matrix: A new matrix representing the result of the multiplication.
+
+        Raises:
+            ValueError: If the number of columns in the first matrix
+                            is not equal to the number of rows in the second matrix.
+        """
+        if isinstance(other_matrix, (int, float)):
+            # Scalar multiplication
+            return self.__scalar(other_matrix)
+        elif isinstance(other_matrix, Matrix):
+            # Matrix multiplication
+            if self.cols != other_matrix.rows:
+                raise ValueError(
+                    "Number of columns in the first matrix must be equal to the number of rows in the second matrix.")
+
+            result_data = []
+            for i in range(self.rows):
+                row = []
+                for j in range(other_matrix.cols):
+                    element = 0
+                    for k in range(self.cols):
+                        element += self.data[i][k] * other_matrix.data[k][j]
+                    row.append(element)
+                result_data.append(row)
+
+            return Matrix(result_data)
+        else:
+            raise TypeError("Unsupported operand type for *")
+
+    def __scalar(self, scalar: float) -> 'Matrix':
+        """Multiplies the matrix by a scalar value.
+
+        Args:
+            scalar (float): The scalar value to multiply the matrix by.
+
+        Returns:
+            Matrix: A new Matrix object representing the result of the scalar multiplication.
+        """
+        result = [[scalar * element for element in row] for row in self.data]
+        return Matrix(result)
+
     @staticmethod
-    def _validate(data):
+    def __validate(data):
         """ Validate the matrix data.
 
         Returns:
@@ -155,11 +203,11 @@ class Matrix:
         """
         if isinstance(data, list):
             if all(isinstance(row, list) and all(isinstance(x, (int, float))
-                    for x in row) for row in data):
+                                                 for x in row) for row in data):
                 return True
         return False
 
-    def _is_square(self) -> bool:
+    def __is_square(self) -> bool:
         """Checks if the current matrix is a square matrix.
 
         Returns:
@@ -167,13 +215,13 @@ class Matrix:
         """
         return self.rows == self.cols
 
-    def _is_symmetric(self) -> bool:
+    def __is_symmetric(self) -> bool:
         """Checks if the current matrix is a symmetric matrix.
 
         Returns:
             bool: True if the matrix is symmetric, False otherwise.
         """
-        if not self._is_square():
+        if not self.__is_square():
             return False
 
         for i in range(self.rows):
@@ -183,13 +231,13 @@ class Matrix:
 
         return True
 
-    def _is_diagonal(self) -> bool:
+    def __is_diagonal(self) -> bool:
         """Checks if the current matrix is a diagonal matrix.
 
         Returns:
             bool: True if the matrix is diagonal, False otherwise.
         """
-        if not self._is_square():
+        if not self.__is_square():
             return False
 
         for i in range(self.rows):
@@ -199,13 +247,13 @@ class Matrix:
 
         return True
 
-    def _is_identity(self) -> bool:
+    def __is_identity(self) -> bool:
         """Checks if the current matrix is an identity matrix.
 
         Returns:
             bool: True if the matrix is an identity matrix, False otherwise.
         """
-        if not self._is_square():
+        if not self.__is_square():
             return False
 
         for i in range(self.rows):
@@ -219,7 +267,7 @@ class Matrix:
 
         return True
 
-    def _is_inverse(self) -> bool:
+    def __is_inverse(self) -> bool:
         """Checks if the current matrix is invertible.
 
         Returns:
@@ -228,12 +276,12 @@ class Matrix:
         Raises:
             ValueError: If the matrix is not square.
         """
-        if not self._is_square():
+        if not self.__is_square():
             return False
 
         return self.determinant() != 0
 
-    def _rank(self) -> int:
+    def __rank(self) -> int:
         """Calculates the rank of the matrix.
 
         Returns:
@@ -245,20 +293,20 @@ class Matrix:
         numpy_data = np.array(self.data)
         return np.linalg.matrix_rank(numpy_data)
 
-    def _positive_definite(self) -> bool:
+    def __positive_definite(self) -> bool:
         """Checks if the matrix is positive definite.
 
         Returns:
             bool: True if the matrix is positive definite, False otherwise.
         """
-        if self._is_square() and self._is_symmetric():
+        if self.__is_square() and self.__is_symmetric():
             matrix_np = np.array(self.data)
             eigenvalues = np.linalg.eigvals(matrix_np)
             return np.all(eigenvalues > 0)
         else:
             return False
 
-    def _cofactor(self, row: int, col: int) -> float:
+    def __cofactor(self, row: int, col: int) -> float:
         """Calculates and returns the cofactor of the specified element in the matrix.
 
         Args:
@@ -290,7 +338,7 @@ class Matrix:
         Raises:
             ValueError: If the matrix is not square.
         """
-        if not self._is_square():
+        if not self.__is_square():
             raise ValueError("Matrix must be square to calculate the determinant.")
 
         numpy_data = np.array(self.data)
@@ -320,7 +368,7 @@ class Matrix:
         Raises:
             ValueError: If the matrix is not square or its determinant is zero.
         """
-        if not self._is_inverse():
+        if not self.__is_inverse():
             raise ValueError("Matrix is not invertible (determinant is zero).")
 
         numpy_data = np.array(self.data)
@@ -355,55 +403,73 @@ class Matrix:
         Returns:
             Matrix: The adjoint matrix.
         """
-        if self._is_square():
+        if self.__is_square():
             adjoint_data = [[0.0] * self.cols for _ in range(self.rows)]
             for i in range(self.rows):
                 for j in range(self.cols):
-                    cofactor = self._cofactor(i, j)
+                    cofactor = self.__cofactor(i, j)
                     adjoint_data[j][i] = cofactor
             return Matrix(adjoint_data)
         else:
             raise ValueError("The matrix is not square.")
 
-    def multiply(self, other_matrix: 'Matrix') -> 'Matrix':
-        """Multiplies the current matrix with another matrix.
+    def swap_row(self, row1: int, row2: int) -> 'Matrix':
+        """Swaps two rows in the matrix and returns a new matrix.
 
         Args:
-            other_matrix (Matrix): The matrix to multiply with.
+            row1 (int): Index of the first row to swap (0-based index).
+            row2 (int): Index of the second row to swap (0-based index).
 
         Returns:
-            Matrix: A new matrix representing the result of the multiplication.
-
-        Raises:
-            ValueError: If the number of columns in the first matrix is not equal to the number of rows in the second matrix.
+            Matrix: A new matrix with the rows swapped.
         """
-        if self.cols != other_matrix.rows:
-            raise ValueError(
-                "Number of columns in the first matrix must be equal to the number of rows in the second matrix.")
-
-        result_data = []
-        for i in range(self.rows):
-            row = []
-            for j in range(other_matrix.cols):
-                element = 0
-                for k in range(self.cols):
-                    element += self.data[i][k] * other_matrix.data[k][j]
-                row.append(element)
-            result_data.append(row)
-
+        result_data = [row.copy() for row in self.data]
+        result_data[row1], result_data[row2] = result_data[row2], result_data[row1]
         return Matrix(result_data)
 
-    def scalar(self, scalar: float) -> 'Matrix':
-        """Multiplies the matrix by a scalar value.
+    def swap_col(self, col1: int, col2: int) -> 'Matrix':
+        """Swaps two columns in the matrix and returns a new matrix.
 
         Args:
-            scalar (float): The scalar value to multiply the matrix by.
+            col1 (int): Index of the first column to swap (0-based index).
+            col2 (int): Index of the second column to swap (0-based index).
 
         Returns:
-            Matrix: A new Matrix object representing the result of the scalar multiplication.
+            Matrix: A new matrix with the columns swapped.
         """
-        result = [[scalar * element for element in row] for row in self.data]
-        return Matrix(result)
+        result_data = [[row[i] for i in range(self.cols)] for row in self.data]
+        for row in result_data:
+            row[col1], row[col2] = row[col2], row[col1]
+        return Matrix(result_data)
+
+    def scalar_row(self, row_index: int, scalar: float) -> 'Matrix':
+        """Multiplies a row in the matrix by a scalar value and returns a new matrix.
+
+        Args:
+            row_index (int): Index of the row to multiply (0-based index).
+            scalar (float): The scalar value to multiply the row by.
+
+        Returns:
+            Matrix: A new matrix with the row multiplied by the scalar.
+        """
+        result_data = [row.copy() for row in self.data]
+        result_data[row_index] = [scalar * element for element in result_data[row_index]]
+        return Matrix(result_data)
+
+    def scalar_col(self, col_index: int, scalar: float) -> 'Matrix':
+        """Multiplies a column in the matrix by a scalar value and returns a new matrix.
+
+        Args:
+            col_index (int): Index of the column to multiply (0-based index).
+            scalar (float): The scalar value to multiply the column by.
+
+        Returns:
+            Matrix: A new matrix with the column multiplied by the scalar.
+        """
+        result_data = [[row[i] for i in range(self.cols)] for row in self.data]
+        for row in result_data:
+            row[col_index] *= scalar
+        return Matrix(result_data)
 
     @staticmethod
     def dimensions_match(matrix1: 'Matrix', matrix2: 'Matrix') -> bool:
@@ -454,12 +520,12 @@ class Vector(Matrix):
         Args:
             data (list): The data of the vector, a 1D list of floats.
         """
-        if self._validate(data):
+        if self.__validate(data):
             super().__init__(data)
-            self.magnitude = self._magnitude()
+            self.magnitude = self.__magnitude()
         else:
             raise ValueError("Vector is not an validated vector")
-        
+
     @override
     def __add__(self, other_vector: 'Vector') -> 'Vector':
         """Adds two vectors element-wise.
@@ -482,7 +548,7 @@ class Vector(Matrix):
 
         sum_vector_data = np.array(self.data) + np.array(other_vector.data)
         return Vector(sum_vector_data.tolist())
-    
+
     @override
     def __sub__(self, other_vector: 'Vector') -> 'Vector':
         """Subtracts one vector from another element-wise.
@@ -505,8 +571,8 @@ class Vector(Matrix):
 
         diff_vector_data = np.array(self.data) - np.array(other_vector.data)
         return Vector(diff_vector_data.tolist())
-    
-    def _magnitude(self):
+
+    def __magnitude(self):
         """Calculates the magnitude (length) of the vector.
         
         Returns:
@@ -518,7 +584,7 @@ class Vector(Matrix):
 
     @override
     @staticmethod
-    def _validate(data) -> bool:
+    def __validate(data) -> bool:
         """ Validate the vector data.
 
         Returns:
@@ -534,7 +600,7 @@ class Vector(Matrix):
                 )
         return False
 
-    def dot_product(self, other_vector: 'Vector'):
+    def dot(self, other_vector: 'Vector'):
         """Calculates the dot product of the vector with another vector.
 
         Args:
@@ -545,7 +611,7 @@ class Vector(Matrix):
         """
         return np.dot(np.array(self.data), np.array(other_vector.data))
 
-    def cross_product(self, other_vector: 'Vector'):
+    def cross(self, other_vector: 'Vector'):
         """Calculates the cross product of the vector with another vector.
 
         Args:
