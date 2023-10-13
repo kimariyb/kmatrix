@@ -43,3 +43,24 @@ def vector(array: list) -> Vector:
         Vector: A Vector object representing the input vector.
     """
     return Vector(array)
+
+
+def get_elementary_matrix(matrix1: Matrix, matrix2: Matrix, trans_type: str) -> Matrix:
+    """Returns the elementary matrix obtained from elementary transformations.
+
+    Args:
+        matrix1 (Matrix): The initial matrix.
+        matrix2 (Matrix): The transformed matrix.
+        trans_type (str): The type of transformation, must be either 'col' or 'row'.
+
+    Returns:
+        Matrix: The elementary matrix obtained from the elementary transformations.
+    """
+    if trans_type == 'col':
+        # Perform column transformations
+        return matrix1.inverse() * matrix2
+    elif trans_type == 'row':
+        # Perform row transformations
+        return matrix2 * matrix1.inverse()
+    else:
+        raise ValueError("trans_type must be 'col' or 'row'.")

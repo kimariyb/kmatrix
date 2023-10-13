@@ -19,17 +19,15 @@ For details, see the LICENSE file.
 """
 import kmatrix as kmx
 
+# 这里有一个矩阵 A
 A = kmx.matrix([
     [1, 2, 3],
     [3, 2, 1],
     [0, 0, 7]
 ])
-
-B = kmx.matrix([
-    [1, 2, 3],
-    [3, 2, 1],
-    [2, 4, 13]
-])
-
-print(A.swap_row(0, 1))
-
+# 对矩阵 A 做一次列变换
+# 交换了第二列和第三列
+# [1, 3, 2]
+# [3, 1, 2]
+# [0, 7, 0]
+B = A.swap_col(1, 2)

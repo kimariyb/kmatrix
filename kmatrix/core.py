@@ -168,17 +168,9 @@ class Matrix:
                 raise ValueError(
                     "Number of columns in the first matrix must be equal to the number of rows in the second matrix.")
 
-            result_data = []
-            for i in range(self.rows):
-                row = []
-                for j in range(other_matrix.cols):
-                    element = 0
-                    for k in range(self.cols):
-                        element += self.data[i][k] * other_matrix.data[k][j]
-                    row.append(element)
-                result_data.append(row)
+            result_data = np.dot(self.data, other_matrix.data)
 
-            return Matrix(result_data)
+            return Matrix(np.round(result_data, decimals=3).tolist())
         else:
             raise TypeError("Unsupported operand type for *")
 
@@ -343,7 +335,7 @@ class Matrix:
 
         numpy_data = np.array(self.data)
 
-        return np.round(np.linalg.det(numpy_data), decimals=4)
+        return np.round(np.linalg.det(numpy_data), decimals=3)
 
     def transpose(self) -> 'Matrix':
         """Transposes the current matrix.
@@ -373,7 +365,7 @@ class Matrix:
 
         numpy_data = np.array(self.data)
         inverse_data = np.linalg.inv(numpy_data).tolist()
-        return Matrix(np.round(inverse_data, decimals=4).tolist())
+        return Matrix(np.round(inverse_data, decimals=3).tolist())
 
     def eigenvalues(self) -> any:
         """Calculates the eigenvalues of the current matrix.
@@ -383,7 +375,7 @@ class Matrix:
         """
         numpy_data = np.array(self.data)
         eigenvalues, _ = np.linalg.eig(numpy_data)
-        rounded_eigenvalues = np.round(eigenvalues, decimals=4)
+        rounded_eigenvalues = np.round(eigenvalues, decimals=3)
         return rounded_eigenvalues.tolist()
 
     def eigenvectors(self) -> 'Matrix':
@@ -394,7 +386,7 @@ class Matrix:
         """
         numpy_data = np.array(self.data)
         _, eigenvectors = np.linalg.eig(numpy_data)
-        rounded_eigenvectors = np.round(eigenvectors, decimals=4)
+        rounded_eigenvectors = np.round(eigenvectors, decimals=3)
         return rounded_eigenvectors.tolist()
 
     def adjoint_matrix(self) -> 'Matrix':
@@ -580,7 +572,7 @@ class Vector(Matrix):
         """
         vector = np.array(self.data)
         magnitude = np.linalg.norm(vector)
-        return np.round(magnitude, decimals=4)
+        return np.round(magnitude, decimals=3)
 
     @override
     @staticmethod
