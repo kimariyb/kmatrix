@@ -64,3 +64,24 @@ def get_elementary_matrix(matrix1: Matrix, matrix2: Matrix, trans_type: str) -> 
         return matrix2 * matrix1.inverse()
     else:
         raise ValueError("trans_type must be 'col' or 'row'.")
+
+
+def kronecker_product(matrix1: Matrix, matrix2: Matrix) -> Matrix:
+    """Compute the Kronecker product of two matrices.
+
+    Args:
+        matrix1 (Matrix): The first matrix.
+        matrix2 (Matrix): The second matrix.
+
+    Returns:
+        Matrix: The resulting matrix from the Kronecker product.
+    """
+    # Convert the input matrices to NumPy arrays
+    ndarray_matrix1 = np.array(matrix1.data)
+    ndarray_matrix2 = np.array(matrix2.data)
+    
+    # Compute the Kronecker product using NumPy's kron function
+    result = np.kron(ndarray_matrix1, ndarray_matrix2)
+    
+    # Convert the result back to a Matrix object
+    return Matrix(np.round(result, decimals=3).tolist())

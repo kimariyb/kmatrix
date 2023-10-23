@@ -29,13 +29,13 @@ You can use the following commands to run the kmatrix.
 >>> B = A.inverse()
 
 # Let matrix A be multiplied by matrix B, and print the result.
->>> print(Matrix.multiply(A, B))
+>>> print(A * B)
     1.0 0.0 0.0
     0.0 1.0 0.0
     0.0 0.0 1.0
 
 # Let matrix A be added by matrix B, and print the result.
->>> print(Matrix.add(A, B))
+>>> print(A + B)
     2.0 0.0 2.0
     1.0 2.0 0.0
     0.0 2.0 0.0

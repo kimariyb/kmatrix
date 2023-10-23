@@ -462,6 +462,19 @@ class Matrix:
         for row in result_data:
             row[col_index] *= scalar
         return Matrix(result_data)
+    
+    def trace(self) -> any:
+        """Returns the trace of the matrix.
+
+        Returns:
+            any: The trace of the matrix.
+            
+        Raises:
+            ValueError: If the matrix is not square.
+        """
+        if not self.__is_square():
+            raise ValueError("Trace can only be calculated for square matrices.")
+        return np.trace(np.array(self.data))
 
     @staticmethod
     def dimensions_match(matrix1: 'Matrix', matrix2: 'Matrix') -> bool:
